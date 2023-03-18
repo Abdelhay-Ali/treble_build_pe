@@ -1,0 +1,28 @@
+name: main-test
+on:
+  watch:
+    types: [started]
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run script file
+      id: build
+      run: |
+         chmod +x ./main.sh
+         ./main.sh
+      shell: bash
+      
+    - name: Release build
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: ${{ steps.build.outputs.outfile }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        allowUpdates: true
+        tag: PE_18_13_2023
